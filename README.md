@@ -1,98 +1,244 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS + MongoDB Users API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A REST API built with NestJS and Mongoose for basic user CRUD operations.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is a clean starter for:
 
-## Description
+- Structuring a NestJS app with modules, services, controllers, and repositories
+- Connecting to MongoDB with `@nestjs/mongoose`
+- Validating incoming payloads with `class-validator` and a global `ValidationPipe`
+- Writing unit and e2e tests with Jest
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework:** NestJS 11
+- **Language:** TypeScript
+- **Database:** MongoDB (via Mongoose)
+- **Validation:** `class-validator` + `class-transformer`
+- **Package manager:** pnpm
+- **Testing:** Jest + Supertest
 
-```bash
-$ pnpm install
+## Project Structure
+
+```text
+src/
+  app.module.ts
+  main.ts
+  user/
+    dto/
+      create-user.dto.ts
+      update-user.dto.ts
+    schemas/
+      user.schema.ts
+    user.controller.ts
+    user.module.ts
+    user.repository.ts
+    user.service.ts
+test/
+  app.e2e-spec.ts
 ```
 
-## Compile and run the project
+## How It Works
 
-```bash
-# development
-$ pnpm run start
+- `AppModule` loads config and creates a Mongo connection using `MONGODB_URI`.
+- `UserModule` registers the `User` schema and exposes user endpoints.
+- `UserController` defines HTTP routes.
+- `UserService` holds business flow and delegates to repository methods.
+- `UserRepository` encapsulates database operations and throws `NotFoundException` when needed.
 
-# watch mode
-$ pnpm run start:dev
+## Environment Variables
 
-# production mode
-$ pnpm run start:prod
+Create a local `.env` file (or copy from `.env.sample`) with:
+
+```env
+MONGODB_URI=mongodb://localhost:27017/nestjs-mongo
+PORT=3000
 ```
 
-## Run tests
+Notes:
+
+- `MONGODB_URI` is required.
+- `PORT` is optional; defaults to `3000`.
+
+## Getting Started
+
+### 1) Install dependencies
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+pnpm install
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2) Configure environment
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+cp .env.sample .env
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Then update `.env` with your MongoDB connection string.
 
-## Resources
+### 3) Run the API
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+# Standard
+pnpm run start
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Development (watch mode)
+pnpm run start:dev
 
-## Support
+# Debug watch mode
+pnpm run start:debug
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Production build + run
+pnpm run build
+pnpm run start:prod
+```
 
-## Stay in touch
+Base URL (local): `http://localhost:3000`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Validation Behavior
+
+A global `ValidationPipe` is enabled in `main.ts` with:
+
+- `forbidUnknownValues: true`
+- `forbidNonWhitelisted: true`
+
+DTO validation currently enforces string fields for create/update payloads.
+
+## API Reference
+
+### Health/Default
+
+#### `GET /`
+
+Returns:
+
+```json
+"Hello World!"
+```
+
+### Users
+
+#### `POST /users`
+
+Create a user.
+
+Request body:
+
+```json
+{
+  "firstname": "Ada",
+  "lastname": "Lovelace",
+  "email": "ada@example.com"
+}
+```
+
+Response: created user document.
+
+#### `GET /users`
+
+Get all users.
+
+Response: array of user documents.
+
+#### `GET /users/:id`
+
+Get a single user by `id` (custom user field, not Mongo `_id`).
+
+Response: user document or `404`.
+
+#### `PATCH /users/:id`
+
+Partially update a user by `id`.
+
+Request body (any subset of user fields):
+
+```json
+{
+  "firstname": "Grace"
+}
+```
+
+Response: updated user document.
+
+#### `DELETE /users/:id`
+
+Delete a user by `id`.
+
+Response: deleted user document.
+
+## Quick cURL Examples
+
+```bash
+# Create
+curl -X POST http://localhost:3000/users \
+  -H "Content-Type: application/json" \
+  -d '{"firstname":"Ada","lastname":"Lovelace","email":"ada@example.com"}'
+
+# List
+curl http://localhost:3000/users
+
+# Get one by id
+curl http://localhost:3000/users/<user-id>
+
+# Update
+curl -X PATCH http://localhost:3000/users/<user-id> \
+  -H "Content-Type: application/json" \
+  -d '{"lastname":"Byron"}'
+
+# Delete
+curl -X DELETE http://localhost:3000/users/<user-id>
+```
+
+## Available Scripts
+
+```bash
+pnpm run build       # Build TypeScript -> dist/
+pnpm run format      # Prettier format for src/test
+pnpm run lint        # ESLint with --fix
+pnpm run start       # Run app
+pnpm run start:dev   # Run app in watch mode
+pnpm run start:debug # Run app with debugger + watch
+pnpm run start:prod  # Run built app from dist/
+pnpm run test        # Unit tests
+pnpm run test:watch  # Unit tests in watch mode
+pnpm run test:cov    # Coverage report
+pnpm run test:e2e    # End-to-end tests
+```
+
+## Testing
+
+Run unit tests:
+
+```bash
+pnpm run test
+```
+
+Run e2e tests:
+
+```bash
+pnpm run test:e2e
+```
+
+Run coverage:
+
+```bash
+pnpm run test:cov
+```
+
+## Error Handling
+
+Repository methods throw `NotFoundException('User not found.')` when no matching user exists for:
+
+- `GET /users/:id`
+- `PATCH /users/:id`
+- `DELETE /users/:id`
+
+## Common Pitfalls
+
+- The API queries users by `id` field, not MongoDB `_id`.
+- If you create users without an `id`, lookups by route `:id` will fail.
+- Ensure your MongoDB instance is reachable from the value in `MONGODB_URI`.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is marked as `UNLICENSED` in `package.json`.
