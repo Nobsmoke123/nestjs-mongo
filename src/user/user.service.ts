@@ -12,18 +12,18 @@ export class UserService {
   }
 
   async findAll() {
-    return this.userRepository.findAll({});
+    return this.userRepository.find({});
   }
 
   async findOne(id: string) {
-    return this.userRepository.findOne({ id });
+    return this.userRepository.findOne({ _id: id }, {});
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update({ id }, updateUserDto);
+    return this.userRepository.findOneAndUpdate({ _id: id }, updateUserDto);
   }
 
   remove(id: string) {
-    return this.userRepository.remove({ id });
+    return this.userRepository.deleteMany({ _id: id });
   }
 }
