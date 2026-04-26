@@ -23,41 +23,20 @@ This project is a clean starter for:
 ```text
 src/
   app.module.ts
-  database/
-    database.module.ts
-    database.service.ts
+  main.ts
   user/
+    dto/
+      create-user.dto.ts
+      update-user.dto.ts
+    schemas/
+      user.schema.ts
     user.controller.ts
-    user.service.ts
+    user.module.ts
     user.repository.ts
-    user.service.spec.ts
-    user.controller.spec.ts
-    user.repository.spec.ts
-    test/
-      stubs/user.stub.ts
-      support/user.model.ts
+    user.service.ts
 test/
-  jest-e2e.json
-  user.e2e-spec.ts
+  app.e2e-spec.ts
 ```
-
-## Prerequisites
-
-- Node.js 20+ (or compatible with NestJS 11)
-- pnpm
-- MongoDB instance(s)
-
-Create a `.env` file in the project root:
-
-```env
-MONGODB_URI=mongodb://localhost:27017/nestjs-mongo
-MONGODB_URI_TEST=mongodb://localhost:27017/nestjs-mongo-test
-NODE_ENV=development
-```
-
-`src/app.module.ts` switches DB connection by environment:
-- `NODE_ENV=test` -> uses `MONGODB_URI_TEST`
-- otherwise -> uses `MONGODB_URI`
 
 ## How It Works
 
@@ -125,178 +104,17 @@ A global `ValidationPipe` is enabled in `main.ts` with:
 
 DTO validation currently enforces string fields for create/update payloads.
 
-## API Overview
-
-Current e2e coverage targets the `users` resource:
-
-- `GET /users`
-- `POST /users`
-- `GET /users/:id`
-- `PATCH /users/:id`
-- `DELETE /users/:id`
-
-## Testing Guide
-
-This project has two test layers:
-
-- **Unit tests** in `src/**/**.spec.ts`
-- **E2E tests** in `test/**/*.e2e-spec.ts`
-
----
-
-## Unit Tests (Jest)
-
-Run:
-
-```bash
-pnpm run test
-```
-
-Watch mode:
-
-```bash
-pnpm run test:watch
-```
-
-Coverage report:
-
-```bash
-pnpm run test:cov
-```
-
-### Unit Test Scope
-
-#### 1) Controller tests: `src/user/user.controller.spec.ts`
-
-Validates controller behavior in isolation by mocking `UserService`:
-
-- Confirms each controller method calls the expected service method.
-- Verifies returned payloads for:
-  - `findOne`
-  - `findAll`
-  - `create`
-  - `update`
-  - `remove`
-
-#### 2) Service tests: `src/user/user.service.spec.ts`
-
-Validates service logic in isolation by mocking `UserRepository`:
-
-- Ensures repository methods are called with correct filters and DTOs.
-- Verifies service method return values for:
-  - `create`
-  - `findAll`
-  - `findOne`
-  - `update`
-  - `remove`
-
-#### 3) Repository tests: `src/user/user.repository.spec.ts`
-
-Validates repository behavior against a mocked Mongoose model:
-
-- Asserts model interaction for:
-  - `findOne`
-  - `find`
-  - `findOneAndUpdate` (including `{ returnDocument: 'after' }`)
-  - `create`
-  - `deleteMany`
-- Confirms returned values from each repository operation.
-
-### Unit Test Data and Mocks
-
-- Shared test fixtures are in `src/user/test/stubs/user.stub.ts`.
-- `userStub()` includes an `_id` for unit tests.
-- Test-specific model mocks are in `src/user/test/support/user.model.ts`.
-
----
-
-## End-to-End Tests (Jest + Supertest)
-
-Run:
-
-```bash
-NODE_ENV=test pnpm run test:e2e
-```
-
-Debug mode (for breakpoints):
-
-```bash
-NODE_ENV=test pnpm run test:debug -- test/user.e2e-spec.ts
-```
-
-### E2E Test Scope
-
-File: `test/user.e2e-spec.ts`
-
-The suite bootstraps a real Nest application (`AppModule`) and tests the full request pipeline:
-
-- HTTP routing
-- controller + service + repository wiring
-- MongoDB persistence
-- response codes and payloads
-
-### E2E Setup Details
-
-- `beforeAll`: creates a Nest app and obtains a raw Mongo `Connection` via `DatabaseService`.
-- `beforeEach`: clears the `users` collection to keep tests isolated.
-- `afterAll`: clears data and closes the app.
-
-This gives deterministic CRUD tests while still exercising real database behavior.
-
-### E2E Scenarios Covered
-
-1. **GET `/users`**
-   - seeds DB with one user
-   - expects `200` and an array containing that user
-
-2. **POST `/users`**
-   - sends `CreateUserDto`
-   - expects `201`
-   - confirms response body and persisted DB document
-
-3. **GET `/users/:id`**
-   - inserts a user directly via Mongo
-   - fetches by inserted id
-   - expects `200` and correct payload
-
-4. **PATCH `/users/:id`**
-   - updates an existing user with `UpdateUserDto`
-   - expects `200`
-   - verifies both response and stored document reflect update
-
-5. **DELETE `/users/:id`**
-   - deletes an existing user
-   - expects `200`
-   - confirms document no longer exists
-
-### E2E Test Data
-
-- `e2eUserStub()` in `src/user/test/stubs/user.stub.ts` provides a stable user object without `_id`.
-
-## Useful Commands
-
-```bash
-# lint
-pnpm run lint
-
-# run all unit tests once
-pnpm run test
-
-# run e2e tests
-NODE_ENV=test pnpm run test:e2e
-
-# generate coverage
-pnpm run test:cov
-```
-
-## Notes
-
-- If e2e tests fail on DB connection, verify `MONGODB_URI_TEST` and that MongoDB is running.
-- Keep the test database separate from development data.
-- Unit tests are fast and isolated; e2e tests are slower but validate integration and persistence.
-
-
 ## API Reference
+
+### Health/Default
+
+#### `GET /`
+
+Returns:
+
+```json
+"Hello World!"
+```
 
 ### Users
 
